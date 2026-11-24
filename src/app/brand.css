@@ -1,11 +1,12 @@
 /* =====================================================================
    Lerne design system (flat)
    Only the Lerne palette, as solid colours. No gradients, glows, blur or shadows.
-   Playfair Display for headings, Inter for text (both installed with the app).
+   Marcellus for headings, Figtree for text (the same fonts as lerne.co.in; both installed with the app).
    Space and thin lines separate things; cards appear only where a block must stand apart.
    ===================================================================== */
 :root {
   --bg: #F0E3CA;        /* page cream */
+  --bar: #FBF6EC;       /* header bar: lighter cream */
   --card: #E4D2AC;      /* tan: alternate sections, quiet panels */
   --surface: #FFFFFF;   /* inputs and the odd white sheet */
   --ink: #2E1B12;       /* text */
@@ -18,8 +19,8 @@
   --line: rgba(92, 61, 46, 0.22);
   --line-strong: rgba(92, 61, 46, 0.4);
   --r: 8px;             /* one corner radius for buttons, fields and panels */
-  --font-sans: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-serif: 'Playfair Display Variable', 'Playfair Display', Georgia, serif;
+  --font-sans: 'Figtree Variable', Figtree, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Marcellus', Georgia, serif;
   --header-h: 68px;
   /* names used by older pages */
   --primary: var(--brand);
@@ -30,7 +31,7 @@
 }
 
 /* ---------- Base ---------- */
-html { scroll-behavior: auto; -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 16px); }
+html { font-synthesis-weight: none; scroll-behavior: auto; -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 16px); }
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-sans); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 * { border-color: var(--line); }
 /* No text highlighting anywhere, except where people type (and the admin tables, so IDs can be copied) */
@@ -41,7 +42,7 @@ body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none
 img { -webkit-user-drag: none; user-drag: none; }
 input, textarea, select, [contenteditable], .admin-content { -webkit-user-select: text; user-select: text; }
 input::selection, textarea::selection, .admin-content ::selection { background: rgba(92, 61, 46, 0.18); }
-h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 700; letter-spacing: -0.015em; color: var(--brand); line-height: 1.15; }
+h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 400; letter-spacing: 0; color: var(--brand); line-height: 1.15; }
 a { color: inherit; }
 img { max-width: 100%; }
 a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
@@ -55,7 +56,7 @@ main { animation: pageIn 0.35s ease backwards; min-height: 60vh; }
 
 /* ---------- Header ---------- */
 .site-header { position: sticky; top: 0; z-index: 50; height: var(--header-h); display: flex; align-items: center; justify-content: space-between;
-  padding: 0 max(20px, calc((100vw - 1120px) / 2)); background: var(--bg); border-bottom: 1px solid var(--line); }
+  padding: 0 max(20px, calc((100vw - 1120px) / 2)); background: var(--bar); border-bottom: 1px solid var(--line); }
 .site-logo { display: flex; align-items: center; gap: 11px; text-decoration: none; }
 .site-logo img { width: 42px; height: 42px; object-fit: contain; }
 .site-logo .word { display: block; font-weight: 800; font-size: 1.2rem; line-height: 1; letter-spacing: 0.1em; color: var(--brand); }
@@ -81,7 +82,7 @@ main { animation: pageIn 0.35s ease backwards; min-height: 60vh; }
 @media (max-width: 860px) {
   .nav-toggle { display: block; }
   .site-nav { position: absolute; top: var(--header-h); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; padding: 0 20px 18px;
-    background: var(--bg); border-bottom: 1px solid var(--line-strong);
+    background: var(--bar); border-bottom: 1px solid var(--line-strong);
     opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.2s, visibility 0.2s; }
   .site-nav.open { opacity: 1; visibility: visible; pointer-events: auto; }
   .site-nav a:not(.nav-cta), .site-nav .signout { display: flex; align-items: center; justify-content: space-between; padding: 15px 2px; font-size: 1.05rem; border-bottom: 1px solid var(--line); text-align: left; width: 100%; }

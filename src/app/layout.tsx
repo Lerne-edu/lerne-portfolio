@@ -1,5 +1,5 @@
-import '@fontsource-variable/inter'
-import '@fontsource-variable/playfair-display'
+import '@fontsource/marcellus'
+import '@fontsource-variable/figtree'
 import './globals.css'
 import './brand.css'
 import './auth.css'
