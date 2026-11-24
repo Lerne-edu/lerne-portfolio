@@ -191,10 +191,25 @@ you set `PARENT_SMS_LOGIN=true` (it needs DLT registration and an SMS provider).
    gets it from `schema.sql`.) It adds `parent_email_registered()` and updates `claim_parent_account()`.
 2. **Custom email sender:** Authentication > SMTP Settings. Without it Supabase only emails your own team.
    Use Resend (`smtp.resend.com`, port 465, username `resend`, password = API key, sender on your verified domain).
-3. **Email templates:** Authentication > Emails > Templates. Open **Magic Link** and **Confirm signup** and make
-   sure each contains `{{ .Token }}` (the 6-digit code). Example body for both:
-   `Your Lerne portfolio sign-in code is {{ .Token }}. It expires soon. If you did not ask for it, ignore this email.`
-   (Both are needed: a first-time parent gets the Confirm signup email, a returning one gets Magic Link.)
+3. **Email templates (Lerne look):** Authentication > Emails > Templates. For each tab below, set the subject and paste the
+   whole file from `supabase/email-templates/` as the body, then Save:
+
+   | Supabase tab | Subject | File |
+   |---|---|---|
+   | Confirm signup | Confirm your Lerne account | `confirm-signup.html` |
+   | Magic Link | Your Lerne sign-in code | `magic-link.html` |
+   | Reset Password | Reset your Lerne password | `recovery.html` |
+   | Invite user | You are invited to Lerne portfolio | `invite.html` |
+   | Change Email Address | Confirm your new email | `email-change.html` |
+   | Reauthentication | Your Lerne confirmation code | `reauthentication.html` |
+
+   Open `supabase/email-templates/preview.html` in a browser to see all six without sending anything.
+   (Confirm signup and Magic Link are both needed: a first-time parent gets Confirm signup, a returning one gets Magic Link.)
+
+   **Links pointing to localhost:** the button in these emails goes to the **Site URL** set in Supabase, so set it to the live address:
+   Authentication > **URL Configuration** > **Site URL** = `https://portfolio.lerne.co.in` (or your `xxxx.vercel.app` address until the
+   domain is connected). Under **Redirect URLs** add `https://portfolio.lerne.co.in/**` and, for testing, `http://localhost:3000/**`.
+   Also set `NEXT_PUBLIC_SITE_URL` in Vercel to the same address and redeploy. The logo in the emails loads from this address too.
 4. Authentication > Rate Limits: raise the email limit to match your expected sign-ins.
 5. Test: put your own email on a parent in a test student list, then sign in with it at `/parent-login`.
 

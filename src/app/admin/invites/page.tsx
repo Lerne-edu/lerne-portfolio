@@ -35,7 +35,7 @@ async function sendInvites(formData: FormData) {
   await sendSms(mobiles, link.replace(/^https?:\/\//, '').replace('/parent-login', ''), process.env.MSG91_INVITE_TEMPLATE_ID)
   await sendWhatsApp(mobiles, process.env.WHATSAPP_INVITE_TEMPLATE_NAME, [link])
   await sendEmail(parents.map((p) => p.email ?? ''), "Your child's portfolio@lerne is ready",
-    `Your child's verified achievement record is ready. Sign in with the mobile number you gave your school: ${link}`)
+    `Your child's verified achievement record is ready. Sign in with the mobile number you gave your school.`, { label: 'Sign in', url: link })
 
   for (let i = 0; i < parents.length; i += 200) {
     await supabase.from('parents').update({ invited_at: new Date().toISOString() }).in('id', parents.slice(i, i + 200).map((p) => p.id))

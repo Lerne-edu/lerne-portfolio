@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 // One header for the whole app: the links change with who is signed in.
 export default async function SiteHeader() {
-  let items: NavItem[] = [{ href: 'https://lerne.co.in', label: 'Website', external: true }, { href: '/signin', label: 'Sign in', cta: true }]
+  let items: NavItem[] = [{ href: 'https://lerne.co.in', label: 'Lerne', external: true }, { href: '/signin', label: 'Sign in', cta: true }]
   let signedIn = false
   try {
     const supabase = await createClient()

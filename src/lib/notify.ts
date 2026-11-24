@@ -1,6 +1,7 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { sendSms } from '@/lib/sms'
 import { sendWhatsApp } from '@/lib/whatsapp'
+import { emailHtml } from '@/lib/emailTemplate'
 
 const chunk = <T,>(a: T[], n: number) => Array.from({ length: Math.ceil(a.length / n) }, (_, i) => a.slice(i * n, i * n + n))
 
@@ -44,11 +45,12 @@ export async function notifyFamily(studentIds: string[], title: string, body: st
     const from = process.env.NOTIFY_FROM
     if (key && from) {
       const site = process.env.NEXT_PUBLIC_SITE_URL ?? ''
+      const html = emailHtml({ title, body, button: { label: 'Open portfolio', url: `${site}${link}` }, site })
       for (const c of chunk([...emails], 100)) {
         await fetch('https://api.resend.com/emails/batch', {
           method: 'POST',
           headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify(c.map((to) => ({ from, to, subject: title, text: `${body}\n\n${site}${link}` }))),
+          body: JSON.stringify(c.map((to) => ({ from, to, subject: title, text: `${body}\n\n${site}${link}`, html }))),
         })
       }
     }

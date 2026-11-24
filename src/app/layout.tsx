@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title: 'portfolio@lerne',
   description: "A verified record of every student's achievements",
 }
-export const viewport: Viewport = { width: 'device-width', initialScale: 1, themeColor: '#FBF7EF' }
+export const viewport: Viewport = { width: 'device-width', initialScale: 1, themeColor: '#F0E3CA' }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   let flash: { message: string; kind: 'ok' | 'error' } | null = null
