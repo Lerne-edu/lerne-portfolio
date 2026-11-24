@@ -26,6 +26,12 @@ export async function middleware(req: NextRequest) {
   if (user && path !== '/change-password' && path !== '/logout' && !path.startsWith('/api')) {
     const { data: me } = await supabase.from('profiles').select('must_change_password, role').eq('id', user.id).maybeSingle()
     if (me?.must_change_password) return NextResponse.redirect(new URL('/change-password', req.url))
+    // Signed-in people never see the empty home page: go straight to their own page
+    if (path === '/') {
+      if (me?.role === 'lerne_admin') return NextResponse.redirect(new URL('/admin/queue', req.url))
+      if (me?.role === 'school_admin' || me?.role === 'teacher') return NextResponse.redirect(new URL('/school', req.url))
+      if (me?.role === 'parent' || me?.role === 'student') return NextResponse.redirect(new URL('/records', req.url))
+    }
     // Two-step check (authenticator app) for the Lerne team and school admins, once switched on with REQUIRE_ADMIN_MFA=true
     if (process.env.REQUIRE_ADMIN_MFA === 'true' && path !== '/mfa' && (path.startsWith('/admin') || path.startsWith('/school')) &&
         (me?.role === 'lerne_admin' || me?.role === 'school_admin')) {
