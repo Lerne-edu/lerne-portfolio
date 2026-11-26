@@ -17,11 +17,12 @@ async function sendEmailOtp(formData: FormData) {
   const supabase = await createClient()
   if (!(await allow(supabase, `eotp:${email}`, 3, 900)) || !(await allow(supabase, `eotpip:${await clientIp()}`, 20, 3600))) redirect('/parent-login?error=limit')
   const { data: registered } = await supabase.rpc('parent_email_registered', { p_email: email })
-  if (registered) {
-    const { error } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true } })
-    if (error) console.error('[parent-login] signInWithOtp failed:', error.message, error.status)
+  if (!registered) redirect(`/parent-login?error=noacc&tried=${encodeURIComponent(email)}`)
+  const { error } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true } })
+  if (error) {
+    console.error('[parent-login] signInWithOtp failed:', error.message, error.status)
+    redirect('/parent-login?error=send')
   }
-  // Same response either way, so the page does not reveal which emails are registered
   redirect(`/parent-login?email=${encodeURIComponent(email)}`)
 }
 
@@ -44,10 +45,12 @@ async function sendOtp(formData: FormData) {
     const supabase = await createClient()
     if (!(await allow(supabase, `otp:${phone}`, 3, 900)) || !(await allow(supabase, `otpip:${await clientIp()}`, 20, 3600))) redirect('/parent-login?via=phone&error=limit')
     const { data: registered } = await supabase.rpc('parent_phone_registered', { p_phone: phone })
-    if (registered) await supabase.auth.signInWithOtp({ phone })
+    if (!registered) redirect(`/parent-login?via=phone&error=noacc&tried=${encodeURIComponent(phone)}`)
+    const { error } = await supabase.auth.signInWithOtp({ phone })
+    if (error) redirect('/parent-login?via=phone&error=send')
+    redirect(`/parent-login?phone=${encodeURIComponent(phone)}`)
   }
-  // Same response either way, so the page does not reveal which numbers are registered
-  redirect(`/parent-login?phone=${encodeURIComponent(phone ?? '')}`)
+  redirect('/parent-login?via=phone&error=phone')
 }
 
 async function verify(formData: FormData) {
@@ -76,10 +79,10 @@ async function signInPassword(formData: FormData) {
   redirect('/')
 }
 
-type SP = { email?: string; phone?: string; via?: string; error?: string }
+type SP = { email?: string; phone?: string; via?: string; error?: string; tried?: string }
 
 export default async function ParentLogin({ searchParams }: { searchParams: Promise<SP> }) {
-  const { email, phone, via, error } = await searchParams
+  const { email, phone, via, error, tried } = await searchParams
   const sms = smsOn()
   const codeStep = Boolean(email) || Boolean(phone)
   const subtitle = codeStep
@@ -92,10 +95,18 @@ export default async function ParentLogin({ searchParams }: { searchParams: Prom
     <AuthShell mode="signin" role="parent" title="Parent sign in" subtitle={subtitle}>
       {error === 'limit' && <p className="form-error" role="alert">Too many attempts. Please wait a few minutes.</p>}
       {error === 'email' && <p className="form-error" role="alert">Please enter a valid email address.</p>}
+      {error === 'phone' && <p className="form-error" role="alert">Please enter a valid 10-digit mobile number.</p>}
+      {error === 'send' && <p className="form-error" role="alert">We could not send the code right now. Please try again in a little while.</p>}
+      {error === 'noacc' && (
+        <p className="form-error" role="alert">
+          No account found{tried ? <> for <b>{tried.replace(/^\+91/, '')}</b></> : null}. {via === 'phone' ? 'Check the number, or use the mobile number your school has for you.' : 'Check the email address, or use the email your school has for you.'}{' '}
+          Not signed up yet? <Link href="/signup">Create an account</Link>.
+        </p>
+      )}
 
       {email ? (
         <>
-          <p className="auth-hint">If this email is registered, we sent a 6-digit code to it. Check your spam folder too.</p>
+          <p className="auth-hint">We sent a 6-digit code to <b>{email}</b>. Check your spam folder too.</p>
           <form action={verifyEmail} className="flex flex-col gap-4">
             <input type="hidden" name="email" value={email} />
             <label className="field"><span>6-digit code</span><input name="token" inputMode="numeric" autoComplete="one-time-code" required placeholder="123456" /></label>
@@ -106,7 +117,7 @@ export default async function ParentLogin({ searchParams }: { searchParams: Prom
         </>
       ) : phone ? (
         <>
-          <p className="auth-hint">If this number is registered, we sent a 6-digit code to it.</p>
+          <p className="auth-hint">We sent a 6-digit code to <b>{phone}</b>.</p>
           <form action={verify} className="flex flex-col gap-4">
             <input type="hidden" name="phone" value={phone} />
             <label className="field"><span>6-digit code</span><input name="token" inputMode="numeric" autoComplete="one-time-code" required placeholder="123456" /></label>
@@ -133,6 +144,7 @@ export default async function ParentLogin({ searchParams }: { searchParams: Prom
               {via === 'phone' ? 'Use email instead' : 'Use mobile number instead'}
             </Link>
           )}
+          <p className="auth-hint">Created your own account (child not at a partner school)? Sign in on the <Link href="/individual-login">Individual tab</Link>.</p>
           <details className="pw-toggle" open={error === 'pwd'}>
             <summary>Use a password instead</summary>
             {error === 'pwd' && <p className="form-error" role="alert">Wrong mobile number, email or password.</p>}

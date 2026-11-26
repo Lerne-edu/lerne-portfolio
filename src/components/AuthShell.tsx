@@ -6,7 +6,7 @@ import Seal from '@/components/Seal'
 // Compact on purpose: the form fits on one screen. Styles live in src/app/auth.css.
 type Props = {
   mode: 'signin' | 'signup'
-  role?: 'parent' | 'student' | 'school'
+  role?: 'parent' | 'student' | 'school' | 'individual'
   plain?: boolean // hides the Sign in / Create account switch (for example the change-password page)
   wide?: boolean // two-column form card (used by the long sign-up form)
   title: string

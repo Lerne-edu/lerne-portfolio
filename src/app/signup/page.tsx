@@ -19,7 +19,7 @@ async function signUp(formData: FormData) {
   }
   if (!(await allow(supabase, `signup:${await clientIp()}`, 5, 3600))) return flash('Too many attempts. Please wait a while and try again.', 'error')
 
-  const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: process.env.NEXT_PUBLIC_SITE_URL ? `${process.env.NEXT_PUBLIC_SITE_URL}/signin` : undefined } })
+  const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: process.env.NEXT_PUBLIC_SITE_URL ? `${process.env.NEXT_PUBLIC_SITE_URL}/individual-login` : undefined } })
   if (error || !data.user) {
     // Shows up in Vercel > Logs, so the real cause (usually the email sender) is visible
     console.error('[signup] supabase.auth.signUp failed:', error?.message, error?.status)
@@ -29,7 +29,7 @@ async function signUp(formData: FormData) {
     }
     return flash('Could not create the account. Please check the details and try again.', 'error')
   }
-  if (data.user.identities?.length === 0) return flash('An account with this email already exists. Please sign in instead.', 'error')
+  if (data.user.identities?.length === 0) return flash('An account with this email already exists. Please sign in on the Individual tab.', 'error')
 
   await createAdminClient().from('pending_signups').upsert({
     user_id: data.user.id,
@@ -37,12 +37,12 @@ async function signUp(formData: FormData) {
   })
   if (data.session) redirect('/') // email confirmation is switched off: signed in already
   await flash('Almost done. Check your email to confirm your address, then sign in.')
-  redirect('/signin')
+  redirect('/individual-login')
 }
 
 export default function SignUp() {
   return (
-    <AuthShell mode="signup" wide title="Create your account" subtitle="For students whose school is not a Lerne partner. Partner-school parents: use the Sign in tab.">
+    <AuthShell mode="signup" wide title="Create your account" subtitle="For students whose school is not a Lerne partner. Partner-school parents: use Sign in, Parent tab. After creating your account, sign in on the Individual tab.">
       <form action={signUp} className="flex flex-col gap-4">
         <p className="group-label">Parent or guardian</p>
         <label className="field"><span>Full name</span><input name="parent_name" required autoComplete="name" /></label>

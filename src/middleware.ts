@@ -19,7 +19,7 @@ export async function middleware(req: NextRequest) {
   )
   const { data: { user } } = await supabase.auth.getUser()
   const path = req.nextUrl.pathname
-  const publicPaths = ['/login', '/parent-login', '/student-login', '/signin', '/signup', '/privacy', '/terms', '/data-use', '/public', '/verify', '/api/getprofily', '/api/razorpay', '/api/cron', '/.well-known', '/robots.txt']
+  const publicPaths = ['/login', '/parent-login', '/student-login', '/individual-login', '/signin', '/signup', '/privacy', '/terms', '/data-use', '/public', '/verify', '/api/getprofily', '/api/razorpay', '/api/cron', '/.well-known', '/robots.txt']
   const isPublic = path === '/' || publicPaths.some((p) => path.startsWith(p))
   if (!user && !isPublic) return NextResponse.redirect(new URL('/login', req.url))
   // Accounts created with a starting password must choose their own before doing anything else
