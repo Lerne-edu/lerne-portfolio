@@ -2,6 +2,12 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(req: NextRequest) {
+  // A reset link that lands on the home page with a code: send it to the reset page
+  if (req.nextUrl.pathname === '/' && req.nextUrl.searchParams.get('code')) {
+    const to = new URL('/auth/callback', req.url)
+    to.searchParams.set('code', req.nextUrl.searchParams.get('code')!)
+    return NextResponse.redirect(to)
+  }
   let res = NextResponse.next({ request: req })
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
