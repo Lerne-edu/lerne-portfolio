@@ -26,6 +26,7 @@ export default async function StudentLogin({ searchParams }: { searchParams: Pro
         {error && <p className="form-error" role="alert">{error === 'limit' ? 'Too many attempts. Please wait a few minutes.' : 'Wrong Lerne ID or password.'}</p>}
         <button className="bg-blue-600 text-white">Sign in</button>
       </form>
+      <p className="auth-hint"><b>Forgot your password?</b> Ask your parent to set a new one from the Records page after they sign in, or write to connect@lerne.co.in.</p>
       <p className="auth-hint">Students in Grades 1 to 5 sign in through their parent&apos;s account.</p>
     </AuthShell>
   )

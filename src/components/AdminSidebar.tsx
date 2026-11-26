@@ -7,7 +7,7 @@ const GROUPS: [string, [string, string][]][] = [
   ['People', [['/admin/students', 'Students'], ['/admin/schools', 'Schools'], ['/admin/school-admins', 'School admins'], ['/admin/invites', 'Parent invites']]],
   ['Data', [['/admin/upload', 'Upload students'], ['/admin/results', 'Upload results'], ['/admin/rollover', 'Yearly rollover'], ['/admin/moves', 'Moves'], ['/admin/certificates', 'Certificate QR']]],
   ['Engage', [['/admin/announce', 'Announce'], ['/admin/store', 'Store'], ['/admin/mentor', 'Mentor sessions'], ['/admin/summaries', 'AI summaries']]],
-  ['System', [['/admin/audit', 'Audit log']]],
+  ['System', [['/admin/signins', 'Sign-in activity'], ['/admin/audit', 'Audit log']]],
 ]
 
 export default function AdminSidebar() {

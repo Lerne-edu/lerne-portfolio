@@ -29,6 +29,7 @@ export default async function IndividualLogin({ searchParams }: { searchParams: 
         {error === 'pwd' && <p className="form-error" role="alert">Wrong password. If you just signed up, confirm your email first (check spam).</p>}
         <button className="bg-blue-600 text-white">Sign in</button>
       </form>
+      <p className="auth-hint"><Link href="/forgot-password">Forgot password?</Link></p>
       <p className="auth-hint">No account yet? <Link href="/signup">Create an account</Link>. Child at a partner school? Use the Parent tab.</p>
     </AuthShell>
   )

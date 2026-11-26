@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import AuthShell from '@/components/AuthShell'
@@ -26,6 +27,7 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
         {error && <p className="form-error" role="alert">{error === 'limit' ? 'Too many attempts. Please wait a few minutes.' : 'Wrong email or password.'}</p>}
         <button className="bg-blue-600 text-white">Sign in</button>
       </form>
+      <p className="auth-hint"><Link href="/forgot-password">Forgot password?</Link></p>
     </AuthShell>
   )
 }
