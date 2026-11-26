@@ -20,7 +20,15 @@ async function signUp(formData: FormData) {
   if (!(await allow(supabase, `signup:${await clientIp()}`, 5, 3600))) return flash('Too many attempts. Please wait a while and try again.', 'error')
 
   const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: process.env.NEXT_PUBLIC_SITE_URL ? `${process.env.NEXT_PUBLIC_SITE_URL}/signin` : undefined } })
-  if (error || !data.user) return flash('Could not create the account. Please check the details and try again.', 'error')
+  if (error || !data.user) {
+    // Shows up in Vercel > Logs, so the real cause (usually the email sender) is visible
+    console.error('[signup] supabase.auth.signUp failed:', error?.message, error?.status)
+    const m = (error?.message ?? '').toLowerCase()
+    if (m.includes('rate limit') || m.includes('sending') || m.includes('smtp')) {
+      return flash('We could not send the confirmation email right now. Please try again in a little while.', 'error')
+    }
+    return flash('Could not create the account. Please check the details and try again.', 'error')
+  }
   if (data.user.identities?.length === 0) return flash('An account with this email already exists. Please sign in instead.', 'error')
 
   await createAdminClient().from('pending_signups').upsert({

@@ -17,7 +17,10 @@ async function sendEmailOtp(formData: FormData) {
   const supabase = await createClient()
   if (!(await allow(supabase, `eotp:${email}`, 3, 900)) || !(await allow(supabase, `eotpip:${await clientIp()}`, 20, 3600))) redirect('/parent-login?error=limit')
   const { data: registered } = await supabase.rpc('parent_email_registered', { p_email: email })
-  if (registered) await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true } })
+  if (registered) {
+    const { error } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true } })
+    if (error) console.error('[parent-login] signInWithOtp failed:', error.message, error.status)
+  }
   // Same response either way, so the page does not reveal which emails are registered
   redirect(`/parent-login?email=${encodeURIComponent(email)}`)
 }
