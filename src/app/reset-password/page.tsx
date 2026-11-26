@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { flash } from '@/lib/flash'
 import AuthShell from '@/components/AuthShell'
+import SubmitButton from '@/components/SubmitButton'
 
 async function save(formData: FormData) {
   'use server'
@@ -25,7 +26,7 @@ export default async function ResetPassword() {
       <form action={save} className="flex flex-col gap-4">
         <label className="field"><span>New password (8+ characters)</span><input name="password" type="password" minLength={8} required autoComplete="new-password" /></label>
         <label className="field"><span>Type it again</span><input name="again" type="password" minLength={8} required autoComplete="new-password" /></label>
-        <button className="bg-blue-600 text-white">Save password</button>
+        <SubmitButton>Save password</SubmitButton>
       </form>
     </AuthShell>
   )

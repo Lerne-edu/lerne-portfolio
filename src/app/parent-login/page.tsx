@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import AuthShell from '@/components/AuthShell'
+import SubmitButton from '@/components/SubmitButton'
 import { toE164India } from '@/lib/phone'
 import { allow, clientIp } from '@/lib/ratelimit'
 
@@ -111,7 +112,7 @@ export default async function ParentLogin({ searchParams }: { searchParams: Prom
             <input type="hidden" name="email" value={email} />
             <label className="field"><span>6-digit code</span><input name="token" inputMode="numeric" autoComplete="one-time-code" required placeholder="123456" /></label>
             {error === '1' && <p className="form-error" role="alert">That code did not work. Try again, or request a new one.</p>}
-            <button className="bg-blue-600 text-white">Verify and sign in</button>
+            <SubmitButton>Verify and sign in</SubmitButton>
           </form>
           <Link href="/parent-login" className="back-link">← Use a different email</Link>
         </>
@@ -122,7 +123,7 @@ export default async function ParentLogin({ searchParams }: { searchParams: Prom
             <input type="hidden" name="phone" value={phone} />
             <label className="field"><span>6-digit code</span><input name="token" inputMode="numeric" autoComplete="one-time-code" required placeholder="123456" /></label>
             {error === '1' && <p className="form-error" role="alert">That code did not work. Try again.</p>}
-            <button className="bg-blue-600 text-white">Verify and sign in</button>
+            <SubmitButton>Verify and sign in</SubmitButton>
           </form>
           <Link href="/parent-login?via=phone" className="back-link">← Use a different number</Link>
         </>
@@ -131,12 +132,12 @@ export default async function ParentLogin({ searchParams }: { searchParams: Prom
           {via === 'phone' && sms ? (
             <form action={sendOtp} className="flex flex-col gap-4">
               <label className="field"><span>Mobile number</span><input name="phone" type="tel" autoComplete="tel" required placeholder="98765 43210" /></label>
-              <button className="bg-blue-600 text-white">Send OTP</button>
+              <SubmitButton>Send OTP</SubmitButton>
             </form>
           ) : (
             <form action={sendEmailOtp} className="flex flex-col gap-4">
               <label className="field"><span>Email address</span><input name="email" type="email" autoComplete="email" required placeholder="you@example.com" /></label>
-              <button className="bg-blue-600 text-white">Send code</button>
+              <SubmitButton>Send code</SubmitButton>
             </form>
           )}
           {sms && (
@@ -151,7 +152,7 @@ export default async function ParentLogin({ searchParams }: { searchParams: Prom
             <form action={signInPassword} className="flex flex-col gap-4">
               <label className="field"><span>Mobile number or email</span><input name="id" required autoComplete="username" placeholder="Mobile number or email" /></label>
               <label className="field"><span>Password</span><input name="password" type="password" autoComplete="current-password" required placeholder="Your password" /></label>
-              <button className="border">Sign in with password</button>
+              <SubmitButton className="border">Sign in with password</SubmitButton>
             </form>
           </details>
         </>

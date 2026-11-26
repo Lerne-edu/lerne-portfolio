@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import AuthShell from '@/components/AuthShell'
+import SubmitButton from '@/components/SubmitButton'
 import { allow, clientIp } from '@/lib/ratelimit'
 
 // For families who created their own account on this site (child not at a Lerne partner school).
@@ -27,7 +28,7 @@ export default async function IndividualLogin({ searchParams }: { searchParams: 
         {error === 'limit' && <p className="form-error" role="alert">Too many attempts. Please wait a few minutes.</p>}
         {error === 'noacc' && <p className="form-error" role="alert">No account found for <b>{tried}</b>. Check the email, or <Link href="/signup">create an account</Link>.</p>}
         {error === 'pwd' && <p className="form-error" role="alert">Wrong password. If you just signed up, confirm your email first (check spam).</p>}
-        <button className="bg-blue-600 text-white">Sign in</button>
+        <SubmitButton>Sign in</SubmitButton>
       </form>
       <p className="auth-hint"><Link href="/forgot-password">Forgot password?</Link></p>
       <p className="auth-hint">No account yet? <Link href="/signup">Create an account</Link>. Child at a partner school? Use the Parent tab.</p>

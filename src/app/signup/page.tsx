@@ -5,6 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { allow, clientIp } from '@/lib/ratelimit'
 import { flash } from '@/lib/flash'
 import AuthShell from '@/components/AuthShell'
+import SubmitButton from '@/components/SubmitButton'
 
 // For families whose child is not at a Lerne partner school (partner-school families are invited from the school's list).
 async function signUp(formData: FormData) {
@@ -55,7 +56,7 @@ export default function SignUp() {
         <label className="field"><span>Current school (optional)</span><input name="school" /></label>
         <label className="field"><span>School city (optional)</span><input name="city" /></label>
         <label className="check"><input name="agree" type="checkbox" required /> <span>I am the student&apos;s parent or guardian. I have read <Link href="/data-use">how we use data</Link>, and I understand the student&apos;s record is created only after I give consent on the next screen.</span></label>
-        <button className="bg-blue-600 text-white">Create account</button>
+        <SubmitButton>Create account</SubmitButton>
       </form>
     </AuthShell>
   )

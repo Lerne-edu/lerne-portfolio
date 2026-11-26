@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import AuthShell from '@/components/AuthShell'
+import SubmitButton from '@/components/SubmitButton'
 import { allow, clientIp } from '@/lib/ratelimit'
 
 async function signIn(formData: FormData) {
@@ -25,7 +26,7 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
         <label className="field"><span>Email</span><input name="email" type="email" autoComplete="email" required placeholder="you@school.edu" /></label>
         <label className="field"><span>Password</span><input name="password" type="password" autoComplete="current-password" required placeholder="Your password" /></label>
         {error && <p className="form-error" role="alert">{error === 'limit' ? 'Too many attempts. Please wait a few minutes.' : 'Wrong email or password.'}</p>}
-        <button className="bg-blue-600 text-white">Sign in</button>
+        <SubmitButton>Sign in</SubmitButton>
       </form>
       <p className="auth-hint"><Link href="/forgot-password">Forgot password?</Link></p>
     </AuthShell>

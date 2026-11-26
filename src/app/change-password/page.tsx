@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { flash } from '@/lib/flash'
 import AuthShell from '@/components/AuthShell'
+import SubmitButton from '@/components/SubmitButton'
 
 async function change(formData: FormData) {
   'use server'
@@ -24,7 +25,7 @@ export default function ChangePassword() {
       <form action={change} className="flex flex-col gap-4">
         <label className="field"><span>New password (8+ characters)</span><input name="password" type="password" minLength={8} required autoComplete="new-password" /></label>
         <label className="field"><span>Type it again</span><input name="again" type="password" minLength={8} required autoComplete="new-password" /></label>
-        <button className="bg-blue-600 text-white">Save and continue</button>
+        <SubmitButton>Save and continue</SubmitButton>
       </form>
     </AuthShell>
   )
